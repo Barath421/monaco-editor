@@ -8,7 +8,7 @@ import Output from "./Output";
 const CodeEditor = () => {
   const editorRef = useRef();
   const [value, setValue] = useState("");
-  const [language, setLanguage] = useState("javascript");
+  const [language, setLanguage] = useState("");
 
   const onMount = (editor) => {
     editorRef.current = editor;
@@ -17,26 +17,26 @@ const CodeEditor = () => {
 
   const onSelect = (language) => {
     setLanguage(language);
-    setValue(CODE_SNIPPETS[language]);
+    setValue(CODE_SNIPPETS[language] || "");
   };
 
   return (
     <Box>
       <HStack spacing={4}>
         <Box w="50%">
-          <LanguageSelector language={language} onSelect={onSelect} />
+          <LanguageSelector initialLanguage={language} onSelect={onSelect} />
           <Editor
             options={{
               minimap: {
                 enabled: false,
               },
+              readOnly: language === "", // Disable typing if no language is selected
             }}
             height="75vh"
             theme="vs-dark"
             language={language}
-            defaultValue={CODE_SNIPPETS[language]}
-            onMount={onMount}
             value={value}
+            onMount={onMount}
             onChange={(value) => setValue(value)}
           />
         </Box>
@@ -45,4 +45,5 @@ const CodeEditor = () => {
     </Box>
   );
 };
+
 export default CodeEditor;

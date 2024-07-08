@@ -15,8 +15,14 @@ import { useState } from "react";
 const languages = Object.entries(LANGUAGE_VERSIONS);
 const ACTIVE_COLOR = "blue.400";
 
-const LanguageSelector = ({ language, onSelect }) => {
+const LanguageSelector = ({ initialLanguage = "", onSelect }) => {
+  const [selectedLanguage, setSelectedLanguage] = useState(initialLanguage);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleSelect = (lang) => {
+    setSelectedLanguage(lang);
+    onSelect(lang);
+  };
 
   return (
     <Box ml={2} mb={4}>
@@ -25,21 +31,21 @@ const LanguageSelector = ({ language, onSelect }) => {
       </Text>
       <Menu isLazy onOpen={() => setMenuOpen(true)} onClose={() => setMenuOpen(false)}>
         <MenuButton as={Button} rightIcon={menuOpen ? <MdArrowDropUp /> : <MdArrowDropDown />}>
-          <Flex align="center">
-            {language}
+          <Flex align="center" color={selectedLanguage ? "inherit" : "gray.500"}>
+            {selectedLanguage || "Select Language"}
           </Flex>
         </MenuButton>
         <MenuList bg="#110c1b">
           {languages.map(([lang, version]) => (
             <MenuItem
               key={lang}
-              color={lang === language ? ACTIVE_COLOR : ""}
-              bg={lang === language ? "gray.900" : "transparent"}
+              color={lang === selectedLanguage ? ACTIVE_COLOR : ""}
+              bg={lang === selectedLanguage ? "gray.900" : "transparent"}
               _hover={{
                 color: ACTIVE_COLOR,
                 bg: "gray.900",
               }}
-              onClick={() => onSelect(lang)}
+              onClick={() => handleSelect(lang)}
             >
               {lang}
               &nbsp;
